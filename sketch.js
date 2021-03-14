@@ -5,6 +5,8 @@ var changeState, readState;
 
 var bedroomImg, gardenImg, washroomImg;
 
+var gameState=["Hungry","Sleeping","Playing", "Bathing"];
+
 function preload()
 {
   //load images here
@@ -31,12 +33,11 @@ function setup() {
   addFood.mousePressed(addFoods);
 
   readState=database.ref('/');
-  readState.on("value",function(data)){
-    gameState=data.val();
-  }
+  readState.on("value",function(data){ 
   
+    gameState=data.val();
+  })
 }
-
 
 function draw() {  
 background(46,139,87);
@@ -60,10 +61,10 @@ currentTime=hour();
 if(currentTime==(lastFed+1)){
   update("Playing");
   foodObj.garden();
-}else if(currentTime==(lastFedd+2)){
+}else if(currentTime==(lastFed+2)){
   update("Sleeping");
   foodObj.bedroom();
-}else if{
+}else if//{
   update("Bathing");
   foodObj.washroom();
 }else{

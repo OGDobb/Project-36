@@ -1,15 +1,15 @@
 class Food{
     constructor() {
          foodStock,
-         lastFed
+         lastFed;
     }
     milkBaottleImg = loadImage("images/Milk.png");
 
-    getFoodStock();
+    //getFoodStock();
 
-    updateFoodStock();
+    //updateFoodStock();
 
-    deductFood();
+    //deductFood();
 
     bedroom(){
         background(bedroomImg,550,500);
