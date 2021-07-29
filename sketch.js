@@ -3,7 +3,7 @@ var dog, happyDog, database, foodS, foodStock, foodObj;
 
 var changeState, readState;
 
-var bedroomImg, gardenImg, washroomImg;
+var bedroomImg, gardenImg, washroomImg, happyImg;
 
 var gameState=["Hungry","Sleeping","Playing", "Bathing"];
 
@@ -15,6 +15,7 @@ function preload()
   bedroomImg=loadImage("images/Bed Room.png");
   gardenImg=loadImage("images/Garden.png");
   washroomImg=loadImage("images/Wash Room.png");
+  //happyImg=loadImage("images/happyDog.pnh");
 }
 
 function setup() {
@@ -61,13 +62,16 @@ currentTime=hour();
 if(currentTime==(lastFed+1)){
   update("Playing");
   foodObj.garden();
-}else if(currentTime==(lastFed+2)){
+}
+else if(currentTime==(lastFed+2)){
   update("Sleeping");
   foodObj.bedroom();
-}else if//{
+}
+else if(currentTime==(lastFed+3)){
   update("Bathing");
   foodObj.washroom();
-}else{
+}
+else{
   update("Hungry");
   foodObj.display();
 }
