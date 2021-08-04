@@ -45,7 +45,7 @@ background(46,139,87);
 //if(keyWentDown(UP_ARROW)){
 //writeStock(foodS);
 //dog.addImage(happyDog);
-food = new display();
+food = new Food();
 textSize(15);
 fill("white");
 stroke("black");
