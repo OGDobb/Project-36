@@ -1,25 +1,35 @@
 //Create variables here
-var dog, happyDog, database, foodS, foodStock, foodObj;
+var dog, happyDog, database, foodS, foodStock, foodObj, sadDog, dogImg;
 
 var changeState, readState;
 
 var bedroomImg, gardenImg, washroomImg, happyImg;
+
+var lastFed;
 
 var gameState=["Hungry","Sleeping","Playing", "Bathing"];
 
 function preload()
 {
   //load images here
-  dog=loadImage("images/dogImg.png");
-  happyDog=loadImage("images/Happy.png");
-  bedroomImg=loadImage("images/Bed Room.png");
-  gardenImg=loadImage("images/Garden.png");
-  washroomImg=loadImage("images/Wash Room.png");
+  dogImg=loadImage("Images/Dog.png");
+  sadDog=loadImage("Images/deadDog.png")
+  happyDog=loadImage("Images/Happy.png");
+  bedroomImg=loadImage("Images/Bed Room.png");
+  gardenImg=loadImage("Images/Garden.png");
+  washroomImg=loadImage("Images/Wash Room.png");
   //happyImg=loadImage("images/happyDog.pnh");
 }
 
 function setup() {
-  createCanvas(500, 500);
+  createCanvas(600, 500);
+
+  foodObj = new Food();
+
+  dog=createSprite(250, 250, 50, 50);
+  dog.addImage("dog", dogImg);
+  dog.addImage("happyDog", happyDog);
+  dog.scale=0.2;
   
   database=firebase.database();
   foodStock=database.ref('Food');
@@ -33,26 +43,30 @@ function setup() {
   addFood.position(800,95);
   addFood.mousePressed(addFoods);
 
-  readState=database.ref('/');
-  readState.on("value",function(data){ 
+  readState=database.ref('gameState');
+  readState.on("value",function(data){
   
     gameState=data.val();
+  
+  })
+  feedTimeRef=database.ref("FeedTime")
+  feedTimeRef.on("value", function(data){
+    lastFed=data.val();
   })
 }
 
 function draw() {  
 background(46,139,87);
-food = new Food();
 textSize(15);
 fill("white");
 stroke("black");
 
 if(lastFed>=12){
-  Text("Last Feed : "+ lastFed%12 + " PM", 350,30);
+  text("Last Feed : "+ lastFed%12 + " PM", 350,30);
 }else if(lastFed==0){
-  Text("Last Feed : 12 AM", 350,30);
+  text("Last Feed : 12 AM", 350,30);
 }else{
-  Text("Last Feed : "+ lastfed + " AM", 350,30);
+  text("Last Feed : "+ lastFed + " AM", 350,30);
 }
 
 currentTime=hour();
@@ -76,10 +90,11 @@ else{
 if(gameState!="Hungry"){
   feed.hide();
   addFood.hide();
-  dog.remove();
+  dog.visible=false;
 }else{
   feed.show();
   addFood.show();
+  dog.visible=true;
   dog.addImage(sadDog);
 }
 drawSprites();
@@ -94,7 +109,7 @@ drawSprites();
 
 
 function readStock(data){
-  foodS=data.val();
+  foodObj.foodStock=data.val();
 }
 
 function writeStock(x){
@@ -104,7 +119,9 @@ function writeStock(x){
 }
 
 function feedDog(){
-  dog.addImage(happyDog);
+  dog.changeImage("happyDog");
+
+  if(foodObj.foodStock>0) {
 
   foodObj.updateFoodStock(foodObj.getFoodStock()-1);
   database.ref('/').update({
@@ -112,11 +129,12 @@ function feedDog(){
     FeedTime:hour()
   })
 }
+}
 
 function addFoods(){
-  foodS++;
+  foodObj.foodStock++;
   database.ref('/').update({
-    Food:foodS
+    Food:foodObj.foodStock
   })
 }
 
